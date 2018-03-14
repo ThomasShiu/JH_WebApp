@@ -1,0 +1,188 @@
+﻿@{
+    ViewBag.Title = "桿次出料時間";
+    Layout = "~/Views/Shared/light7_Layout.cshtml";
+}
+<div class="page-group ">
+    <div id="page-label-input" class="page theme-dark">
+
+        <header class="bar bar-nav">
+            <a class="button button-link button-nav pull-left back" href="javascript:void(0)" onclick="window.history.back();">
+                <span class="icon icon-left"></span>
+                返回
+            </a>
+            <h1 class="title">桿次出料時間</h1>
+        </header>
+
+        <div class="content">
+
+                <div class="list-block media-list inset">
+                    <ul>
+                        <li>
+                            @*<a href="#" class="item-link item-content">*@
+                            <div class="item-inner">
+                                <div class="item-title-row">
+                                    <div class="item-title">桿次:20180309-001</div>
+                                    <div class="item-after">001</div>
+                                </div>
+                                <div class="item-text">
+                                    <div class="row">
+                                        <div class="col-15">卷1:</div>
+                                        <div class="col-35">12121212</div>
+                                        <div class="col-15">卷2:</div>
+                                        <div class="col-35">214135264</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-15">卷3:</div>
+                                        <div class="col-35">92394996</div>
+                                        <div class="col-15">卷4:</div>
+                                        <div class="col-35">08702058235</div>
+                                    </div>
+                                </div>
+                            </div>
+                            @*</a>*@
+                        </li>
+                    </ul>
+
+                </div>
+
+
+
+            <div class="list-block">
+                <ul>
+                    <!-- Text inputs -->
+                    <li>
+                        <div class="item-content">
+                            <div class="item-inner">
+                                <div class="item-title label">入料時間</div>
+                                <div class="item-input">
+                                    <div><h3><span>2018-03-11 14:30</span></h3></div>
+                                    @*<input type="text" placeholder="" id='bdt' value="2018-03-11 14:30" disabled="disabled"/>*@
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <ul>
+                    <!-- Text inputs -->
+                    <li>
+                        <div class="item-content">
+                            <div class="item-inner">
+                                <div class="item-title label">出料時間</div>
+                                <div class="item-input">
+                                    <input type="text" placeholder="" id='edt' value="" />
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+
+
+            <div class="content-block">
+                <div class="row">
+                    <div id="cancel" class="col-50"><a href="javascript:void(0)" class="button button-big button-fill button-danger">取消</a></div>
+                    <div id="finish" class="col-50"><a href="javascript:void(0)" class="button button-big button-fill button-success external">完成</a></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+@section scripts {
+    <script>
+        var cnt = 1;
+        $(function () {
+
+
+            $('input:text').focus(
+                function () {
+                    $(this).css({ 'background-color': '#ff9999' });
+                });
+            $('input:text').blur(
+                function () {
+                    $(this).css({ 'background-color': '#262626' });
+                });
+
+            $("#edt").datetimePicker({
+                toolbarTemplate: '<header class="bar bar-nav">\<button class="button button-link pull-right close-picker">確認</button>\<h1 class="title">選擇時間</h1>\</header>'
+            });
+            $("#edt").focus();
+
+            $("#edt").val(GetNow());
+        });
+
+
+
+        $("#poleno").keyup(function (e) {
+            if (e.keyCode == 13) {
+                if ($("#poleno").val() != "") {
+                    $("#rollno").focus();
+                } else {
+                    $("#poleno").focus();
+                }
+            }
+        });
+
+        $("#rollno").keyup(function (e) {
+            if (e.keyCode == 13) {
+                if (cnt == 1) {
+                    $("#roll_1").text("");
+                    $("#roll_2").text("");
+                    $("#roll_3").text("");
+                    $("#roll_4").text("");
+                }
+                if ($("#rollno").val() != "") {
+                    //$("#rollno").focus();
+                    var rollno = $("#rollno").val();
+                    switch (cnt) {
+                        case 1:
+                            $("#roll_1").text(rollno);
+                            break;
+                        case 2:
+                            $("#roll_2").text(rollno);
+                            break;
+                        case 3:
+                            $("#roll_3").text(rollno);
+                            break;
+                        case 4:
+                            $("#roll_4").text(rollno);
+                            break;
+                        default:
+                            break;
+                    }
+                    $("#rollno").val("");
+                    $("#rollno").focus();
+                    cnt++;
+                }
+                if (cnt >= 5) { cnt = 1 }
+
+                $.toptip('操作成功', 'success');
+            }
+        });
+
+        $("#finish").click(function () {
+            $('#msn')[0].play();
+            $.toast('操作成功，已儲存入料時間...', 2345, 'success top');
+            setTimeout(function () {
+                location.href = '/Pickling/BarcodeScan';
+            }, 1000);
+
+        });
+
+        $("#cancel").click(function () {
+
+            $.confirm('確定要取消嗎?', '回首頁', function () {
+                location.href = '/Pickling/BarcodeScan';
+              
+            });
+
+        });
+
+
+
+    </script>
+}
+

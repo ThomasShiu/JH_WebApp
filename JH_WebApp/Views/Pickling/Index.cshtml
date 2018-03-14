@@ -1,0 +1,109 @@
+﻿@{
+    ViewBag.Title = "酸洗掃描";
+    Layout = "~/Views/Shared/Pickling_Layout.cshtml";
+}
+
+
+<header class='demos-header'>
+    <h1 class="demos-title">晉禾 酸洗製程</h1>
+</header>
+
+<div class="weui-grids">
+
+    <a href="/Pickling/BarcodeScan" class="weui-grid js_grid">
+        <div class="weui-grid__icon">
+            <img src="~/Content/js/weui/images/barcode_scanner2.png" alt="">
+        </div>
+        <p class="weui-grid__label">
+            條碼掃描
+        </p>
+    </a>
+    
+    <a href="/Pickling/QueryPole" class="weui-grid js_grid">
+        <div class="weui-grid__icon">
+            <img src="~/Content/js/weui/images/icon_nav_search.png" alt="">
+        </div>
+        <p class="weui-grid__label">
+            桿次查詢
+        </p>
+    </a>
+    <a href="#" id="notdone" class="weui-grid js_grid">
+    <div class="weui-grid__icon">
+        <img src="~/Content/js/weui/images/icon_nav_datetime.png" alt="">
+    </div>
+    <p class="weui-grid__label">
+        建構中...
+    </p>
+</a>
+    <a href="#" id="notdone" class="weui-grid js_grid">
+        <div class="weui-grid__icon">
+            <img src="~/Content/js/weui/images/icon_nav_cell.png" alt="">
+        </div>
+        <p class="weui-grid__label">
+            建構中...
+        </p>
+    </a>
+    <a href="#" id="notdone" class="weui-grid js_grid">
+        <div class="weui-grid__icon">
+            <img src="~/Content/js/weui/images/icon_nav_toast.png" alt="">
+        </div>
+        <p class="weui-grid__label">
+            建構中...
+        </p>
+    </a>
+    <a href="#" id="notdone" class="weui-grid js_grid">
+        <div class="weui-grid__icon">
+            <img src="~/Content/js/weui/images/icon_nav_dialog.png" alt="">
+        </div>
+        <p class="weui-grid__label">
+            建構中...
+        </p>
+    </a>
+    <a href="#" id="notdone" class="weui-grid js_grid">
+        <div class="weui-grid__icon">
+            <img src="~/Content/js/weui/images/icon_nav_progress.png" alt="">
+        </div>
+        <p class="weui-grid__label">
+            建構中...
+        </p>
+    </a>
+    <a href="#" id="notdone" class="weui-grid js_grid">
+        <div class="weui-grid__icon">
+            <img src="~/Content/js/weui/images/icon_nav_msg.png" alt="">
+        </div>
+        <p class="weui-grid__label">
+            建構中...
+        </p>
+    </a>
+    <a href="~/Pickling" class="weui-grid js_grid">
+        <div class="weui-grid__icon">
+            <img src="~/Content/js/weui/images/icon_nav_noti.png" alt="">
+        </div>
+        <p class="weui-grid__label">
+            登出
+        </p>
+    </a>
+
+</div>
+@section scripts {
+<script>
+    $(function () {
+        FastClick.attach(document.body);
+
+        $.showLoading();
+
+        setTimeout(function () {
+            $.hideLoading();
+        }, 1000)
+
+    });
+
+    $(document).on("click", "#noright", function () {
+        $.alert("您無執行權限！");
+    });
+
+    $(document).on("click", "#notdone", function () {
+        $.alert("未完成，建構中！");
+    });
+</script>
+}

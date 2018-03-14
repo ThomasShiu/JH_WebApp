@@ -1,0 +1,86 @@
+﻿@{
+    ViewBag.Title = "選擇桿次";
+    Layout = "~/Views/Shared/light7_Layout.cshtml";
+}
+
+<div class="page theme-dark">
+    <header class="bar bar-nav">
+        <a class="button button-link button-nav pull-left back" href="javascript:void(0)" onclick="window.history.back();" >
+            <span class="icon icon-left"></span>
+            取消
+        </a>
+        <h1 class="title">選擇桿次</h1>
+    </header>
+    <div class="content">
+        <div class="list-block media-list">
+            <ul id="polelist" onload="GetPoleList"></ul>
+
+        </div>
+    </div>
+    <div class="bar bar-footer">
+        <a class="icon icon-home pull-left"></a>
+        @*<a class="icon icon-settings pull-right"></a>*@
+    </div>
+</div>
+    @section scripts {
+        <script>
+            var v_poleno = $.request("poleno");
+            $.toast('有桿號資料:' + v_poleno);
+            var cnt = 1;
+            $(function () {
+                GetPolesnList();
+               
+            });
+
+
+            // 取得桿次資料
+            function GetPolesnList() {
+                $.showPreloader();
+               
+                // 顯示已選取幾筆
+                setTimeout(function () {
+                    $.ajax({
+                        type: "get",
+                        url: "/Pickling/GetPoleList",
+                        data: { poleno: v_poleno},
+                        dataType: "json",
+                        cache: false,
+                        async: true,
+                        success: function (data) {
+                            //MACHINE_NAME,MO_LIST,TYPE1,SDT,TASK,COLOR
+                            var trHTML = '';
+
+                            $.each(data.pole, function (i, item) {
+                                trHTML += '<li><a href="/Pickling/PolesnInPool?type=in&polesn=' + data.pole[i].POLESN +'" class="item-link item-content external" >';
+                                trHTML += '<div class="item-inner"><div class="item-title-row">';
+                                trHTML += '<div class="item-title">桿次:' + data.pole[i].POLESN + '</div>';
+                                trHTML += '<div class="item-after">桿號:' + data.pole[i].POLENO + '</div>';
+                                trHTML += '</div><div class="item-text"><div class="row">';
+                                trHTML += '<div class="col-15">卷1:</div><div class="col-35">:' + data.pole[i].ROLLNO_1 + '</div>';
+                                trHTML += '<div class="col-15">卷2:</div><div class="col-35">:' + data.pole[i].ROLLNO_2 + '</div>';
+                                trHTML += '</div><div class="row">';
+                                trHTML += '<div class="col-15">卷3:</div><div class="col-35">:' + data.pole[i].ROLLNO_3 + '</div>';
+                                trHTML += '<div class="col-15">卷4:</div><div class="col-35">:' + data.pole[i].ROLLNO_4 + '</div>';
+                                trHTML += '</div></div></div></a></li>';
+                            });
+
+                            $('#polelist').empty();
+                            $('#polelist').append(trHTML);
+                            $('#polelist').trigger('create');
+                            //$('#empcontact').listview('refresh');
+
+                            $.hidePreloader();
+                            $.toast("讀取桿次資料");
+                        },
+                        error: function (msg) {
+                            //alert(msg.responseText);
+                            $.hidePreloader();
+                            $.toast("讀取桿次資料發生錯誤");
+                        }
+                    });
+
+                }, 60);
+            }
+        </script>
+    }
+

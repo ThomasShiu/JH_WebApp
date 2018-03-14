@@ -1,0 +1,258 @@
+﻿@{
+    ViewBag.Title = "酸洗掃描";
+    Layout = "~/Views/Shared/Pickling_Layout.cshtml";
+}
+<div class='demos-content-padded'>
+    <div class="weui-cells__title">掃描桿號/卷號</div>
+    <div class="weui-cells weui-cells_form">
+        <div class="weui-cell">
+            <div class="weui-cell__hd"><label class="weui-label">桿號:</label></div>
+            <div class="weui-cell__bd">
+                <input id="poleno" class="weui-input" type="text" placeholder="請掃描桿號">
+            </div>
+        </div>
+        <div class="weui-cell">
+            <div class="weui-cell__hd"><label class="weui-label">卷號:</label></div>
+            <div class="weui-cell__bd">
+                <input id="rollno" class="weui-input" type="text" placeholder="請掃描卷號">
+            </div>
+        </div>
+
+        <div class="weui-cell">
+            <div class="weui-cell__hd"><label class="weui-label">卷號1 =></label></div>
+            <div class="weui-cell__bd">
+                <span id="roll_1"></span>
+            </div>
+        </div>
+        <div class="weui-cell">
+            <div class="weui-cell__hd"><label class="weui-label">卷號2 =></label></div>
+            <div class="weui-cell__bd">
+                <span id="roll_2"></span>
+            </div>
+        </div>
+        <div class="weui-cell">
+            <div class="weui-cell__hd"><label class="weui-label">卷號3 =></label></div>
+            <div class="weui-cell__bd">
+                <span id="roll_3"></span>
+            </div>
+        </div>
+        <div class="weui-cell">
+            <div class="weui-cell__hd"><label class="weui-label">卷號4 =></label></div>
+            <div class="weui-cell__bd">
+                <span id="roll_4"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="button_sp_area" style="text-align: center;">
+        <a href="javascript:;" class="weui-btn weui-btn_mini weui-btn_warn" id="clear">清除卷號</a>
+        <a href="/Pickling/Index" class="weui-btn weui-btn_mini weui-btn_default" id="home">首頁</a>
+        <a href="javascript:;" class="weui-btn weui-btn_mini weui-btn_primary" id="next">下一步</a>
+    </div>
+</div>
+
+    @section scripts {
+        <script>
+            var cnt = 1;
+            $(function () {
+         
+                $.showLoading();
+                setTimeout(function () {
+                    $.hideLoading();
+                }, 1000)
+
+                $('input:text').focus(
+                    function () {
+                        $(this).css({ 'background-color': '#ff9999' });
+                    });
+                $('input:text').blur(
+                    function () {
+                        $(this).css({ 'background-color': '#eeeeee' });
+                    });
+
+                $("#poleno").focus();
+            });
+
+            $("#poleno").keyup(function (e) {
+
+                $.toast("poleno keyup");
+                try {
+                    if (e.keyCode == 13) {
+                        if ($("#poleno").val() != "") {
+                            $("#rollno").focus();
+                        } else {
+                            $("#poleno").focus();
+                        }
+
+                        $('#beeplong')[0].play();
+                        //$("#ring").get(0).play()
+                    }
+                } catch(ex){
+                    $.toast("poleno error");
+                }
+            });
+
+
+            $("#rollno").keyup(function (e) {
+                if (e.keyCode == 13) {
+                    if (cnt == 1) {
+                        $("#roll_1").text("");
+                        $("#roll_2").text("");
+                        $("#roll_3").text("");
+                        $("#roll_4").text("");
+                    }
+                    if ($("#rollno").val() != "") {
+                        //$("#rollno").focus();
+                        var rollno = $("#rollno").val();
+                        switch (cnt) {
+                            case 1:
+                                $("#roll_1").text(rollno);
+                                break;
+                            case 2:
+                                $("#roll_2").text(rollno);
+                                break;
+                            case 3:
+                                $("#roll_3").text(rollno);
+                                break;
+                            case 4:
+                                $("#roll_4").text(rollno);
+                                break;
+                            default:
+                                break;
+                        }
+                        $("#rollno").val("");
+                        $("#rollno").focus();
+                        cnt++;
+                    }
+                    if (cnt >= 5) { cnt = 1 }
+
+                    $('#beeplong')[0].play();
+
+                    //$.toptip('操作成功', 'success');
+                }
+            });
+
+            $("#next").click(function () {
+                chkpole();
+            });
+
+            function chkpole() {
+                // TODO　檢查是否有桿次資料
+                var v_poleno = $("#poleno").val();
+                var v_rollno1 = $("#roll_1").text();
+                var v_rollno2 = $("#roll_2").text();
+                var v_rollno3 = $("#roll_3").text();
+                var v_rollno4 = $("#roll_4").text();
+
+                if (v_poleno == "" | v_rollno1 == "") {
+                    $.toast('請確實掃描條碼!');
+                    return;
+                }
+                var passdata = {
+                    poleno: v_poleno,
+                    rollno1: v_rollno1,
+                    rollno2: v_rollno2,
+                    rollno3: v_rollno3,
+                    rollno4: v_rollno4,
+                }
+                $.toast(passdata);
+
+
+                // TODO　檢查是否有桿次資料
+                $.ajax({
+                    type: 'GET',
+                    url: "/Pickling/GetPoleData2",
+                    data: { poleno: poleno },
+                    dataType: "json",
+                    async:true,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        if (result.state == "error") {
+                            alert('Error');
+                        }
+                        else {
+                            alert(data.POLENO);
+                        }
+                    }
+                });
+
+                // 有桿次資料前往 [選擇桿次]頁面
+
+                // 沒有桿次資料前往 [入料時間]頁面
+
+
+                $("#roll_1").text("");
+                $("#roll_2").text("");
+                $("#roll_3").text("");
+                $("#roll_4").text("");
+
+                $('#msn')[0].play();
+                //$.toast('操作成功，正在跳轉...', 2345, 'success top');
+                //setTimeout(function () {
+                //    location.href = '/Pickling/PolesnChoice';
+                //}, 1000);
+            }
+
+
+
+            $("#clear").click(function () {
+
+                $.confirm('確定要清除嗎?', '重新掃描',
+                    function () {
+                        // OK
+                        $.toast("已清除欄位，請重新掃描!");
+                        $("#roll_1").text("");
+                        $("#roll_2").text("");
+                        $("#roll_3").text("");
+                        $("#roll_4").text("");
+                        $("#rollno").text("");
+
+                        $("#poleno").val("");
+                        $("#poleno").focus();
+
+                        $('#icq')[0].play();
+                    },
+                    function () {
+                        // CANCEL
+                        $("#rollno").focus();
+                    }
+                );
+               
+            });
+
+            $("#cancel").click(function () {
+
+                $.notification({
+                    title: "通知",
+                    text: "有5卷未完工",
+                    media: "<img src='/Content/js/light7/img/i-form-comment.png'>",
+                    data: "123",
+                    onClick: function (data) {
+                        //$.alert("Click" + data);
+                    },
+                    onClose: function (data) {
+                        //$.alert("Close " + data);
+                    }
+                });
+
+                //close notification
+
+                $.toast("取消");
+                //$.toast('操作成功，正在跳转...', 2345, 'success top');
+
+                $("#roll_1").text("");
+                $("#roll_2").text("");
+                $("#roll_3").text("");
+                $("#roll_4").text("");
+
+                $('#msn')[0].play();
+            });
+
+          
+            
+        </script>
+    }
+
+

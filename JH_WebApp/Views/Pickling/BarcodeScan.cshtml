@@ -1,0 +1,347 @@
+﻿@{
+    ViewBag.Title = "酸洗掃描";
+    Layout = "~/Views/Shared/light7_Layout.cshtml";
+}
+<style>
+    select option {
+        margin: 40px;
+        background: #262626;
+        color: #fff;
+        text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+    }
+</style>
+
+    @*<div class="page-group ">*@
+    <div id="page-label-input" class="page theme-dark">
+
+        <header class="bar bar-nav">
+            <a class="button button-link button-nav pull-left back" href="/Pickling" >
+                <span class="icon icon-left"></span>
+                返回
+            </a>
+            <h1 class="title">酸洗掃描</h1>
+        </header>
+        
+        <div class="content">
+            <div class="list-block">
+                <ul>
+                    <!-- Text inputs -->
+                    <li>
+                        <div class="item-content">
+                            <div class="item-inner">
+                                <div class="item-title label">生鏽程度</div>
+                                <div class="item-input">
+                                    <select id="rust">
+                                        <option value="3">3輕微</option>
+                                        <option value="2">2中等</option>
+                                        <option value="1">1嚴重</option>
+
+                                    </select>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="item-content">
+                            <div class="item-inner">
+                                <div class="item-title label">桿號</div>
+                                <div class="item-input">
+                                    <input id="poleno" type="text" style="background-color:#262626;" placeholder ="Scan Pole Number...">
+                                </div>
+                               
+                            </div>
+                        </div>
+                       
+                    </li>
+                    
+                    <li>
+                        <div class="item-content">
+                            <div class="item-inner">
+                                <div class="item-title label">卷號</div>
+                                <div class="item-input">
+                                    <input id="rollno" type="text" style="background-color:#262626;" placeholder="Scan Roll Number...">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li>
+                        <div class="item-content">
+                            <div class="item-inner">
+                                <div class="item-title label">卷號1=></div>
+                                <div class="item-input">
+                                    <div id="rollno1"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="item-content">
+                            <div class="item-inner">
+                                <div class="item-title label">卷號2=></div>
+                                <div class="item-input">
+                                    <div id="rollno2"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="item-content">
+                            <div class="item-inner">
+                                <div class="item-title label">卷號3=></div>
+                                <div class="item-input">
+                                    <div id="rollno3"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="item-content">
+                            <div class="item-inner">
+                                <div class="item-title label">卷號4=></div>
+                                <div class="item-input">
+                                    <div id="rollno4"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="content-block">
+                <div class="row">
+                    @*<div id="cancel" class="col-40"><a href="#" class="button  button-big button-fill button-danger">取消</a></div>*@
+                    <div id="clear" class="col-50"><a href="#" class="button  button-big button-fill button-danger">清除</a></div>
+                    <div id="next" class="col-50"><a href="#" class="button  button-big button-fill button-success external">下一步</a></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+@*</div>*@   
+
+    @section scripts {
+        <script>
+            var cnt = 1;
+            $(function () {
+                //$.showPreloader();
+                //setTimeout(function () {
+                //    $.hidePreloader();
+                //}, 1000);
+
+                $('input:text').focus(
+                    function () {
+                        $(this).css({ 'background-color': '#ff9999' });
+                    });
+                $('input:text').blur(
+                    function () {
+                        $(this).css({ 'background-color': '#262626' });
+                    });
+
+                $("#poleno").focus();
+            });
+
+            $("#poleno").keyup(function (e) {
+
+                //$.toast("poleno keyup");
+                try {
+                    if (e.keyCode == 13) {
+                        if ($("#poleno").val() != "") {
+                            $("#rollno").focus();
+                            // 檢查是否有桿次資料
+                            chkgotoChoice();
+                        } else {
+                            $("#poleno").focus();
+                        }
+
+                        $('#beeplong')[0].play();
+                        //$("#ring").get(0).play()
+                    }
+                } catch(ex){
+                    $.toast("poleno error");
+                } 
+            });
+
+            // 檢查是否有桿次資料
+            function chkgotoChoice() {
+                
+                var v_poleno = $("#poleno").val();
+                $("#rollno").focus();
+                $.ajax({
+                    type: 'GET',
+                    url: "/Pickling/GetPoleList",
+                    data: { poleno: v_poleno },
+                    dataType: "json",
+                    async: true,
+                    cache: false,
+                    contentType: false,
+                    processData: true,
+                    success: function (data) {
+                        if (data.pole.length > 0) {
+                            $.toast('有桿號資料');
+                            // 有桿次資料前往 [選擇桿次]頁面
+                            location.href = '/Pickling/PolesnChoice?poleno=' + v_poleno;
+
+                        }
+                    }, error: function () { //請求失敗
+                        $.toast('Error');
+                    }
+                });
+            }
+
+            $("#rollno").keyup(function (e) {
+                if (e.keyCode == 13) {
+                    if (cnt == 1) {
+                        $("#rollno1").text("");
+                        $("#rollno2").text("");
+                        $("#rollno3").text("");
+                        $("#rollno4").text("");
+                    }
+                    if ($("#rollno").val() != "") {
+                        //$("#rollno").focus();
+                        var rollno = $("#rollno").val();
+                        switch (cnt) {
+                            case 1:
+                                $("#rollno1").text(rollno);
+                                break;
+                            case 2:
+                                $("#rollno2").text(rollno);
+                                break;
+                            case 3:
+                                $("#rollno3").text(rollno);
+                                break;
+                            case 4:
+                                $("#rollno4").text(rollno);
+                                break;
+                            default:
+                                break;
+                        }
+                        $("#rollno").val("");
+                        $("#rollno").focus();
+                        cnt++;
+                    }
+                    if (cnt >= 5) { cnt = 1 }
+
+                    $('#beeplong')[0].play();
+
+                    //$.toptip('操作成功', 'success');
+                }
+            });
+
+            $("#next").click(function () {
+                var v_poleno = $("#poleno").val();
+                var v_rollno1 = $("#rollno1").text();
+                var v_rollno2 = $("#rollno2").text();
+                var v_rollno3 = $("#rollno3").text();
+                var v_rollno4 = $("#rollno4").text();
+                var v_rust = $("#rust").val();
+                var v_pdate = GetNow();
+
+                $.toast(v_poleno + '  ' + v_rollno1);
+
+                if (v_poleno == "" | v_rollno1 == "") { 
+                    $.toast('請確實掃描條碼!');
+                    return;
+                }
+                var poledata = {
+                    poleno: v_poleno,
+                    rollno1: v_rollno1,
+                    rollno2: v_rollno2,
+                    rollno3: v_rollno3,
+                    rollno4: v_rollno4,
+                    rust: v_rust,
+                    pdate:v_pdate,
+                }
+               // $.toast(v_poleno + '' + v_rollno1);
+
+                // TODO 產生桿號,並寫入桿次資料庫
+                var v_polesn = '';
+                $.ajax({
+                    type: 'GET',
+                    url: "/Pickling/GenPolesn",
+                    data: { poledata: JSON.stringify(poledata)  },
+                    dataType: "text",
+                    async: true,
+                    cache: false,
+                    contentType: false,
+                    processData: true,
+                    success: function (data) {
+                        if (data != "") {
+                            v_polesn = data;
+                            $.toast('桿次:' + v_polesn); 
+                            $("#rollno1").text("");
+                            $("#rollno2").text("");
+                            $("#rollno3").text("");
+                            $("#rollno4").text("");
+
+                            $('#msn')[0].play();
+                            //前往 [入料時間]頁面
+                            location.href = '/Pickling/PolesnInPool?type=in&polesn=' + v_polesn ;
+                        }
+                    }, error: function () { //請求失敗
+                        $.toast('Error');
+                        return;
+                    }
+                });
+            });
+
+            $("#clear").click(function () {
+
+                $.confirm('確定要清除嗎?', '重新掃描',
+                    function () {
+                        // OK
+                        $.toast("已清除欄位，請重新掃描!");
+                        cnt = 1;
+
+                        $("#rollno1").text("");
+                        $("#rollno2").text("");
+                        $("#rollno3").text("");
+                        $("#rollno4").text("");
+                        $("#rollno").val("");
+
+                        $("#poleno").val("");
+                        $("#poleno").focus();
+
+                        $('#icq')[0].play();
+                    },
+                    function () {
+                        // CANCEL
+                        $("#rollno").focus();
+                    }
+                );
+               
+            });
+
+            $("#cancel").click(function () {
+                $.confirm('確定要取消嗎?', '回首頁', function () {
+                    location.href = '/Pickling';
+                });
+
+                //$.notification({
+                //    title: "通知",
+                //    text: "有5卷未完工",
+                //    media: "<img src='/Content/js/light7/img/i-form-comment.png'>",
+                //    data: "123",
+                //    onClick: function (data) {
+                       
+                //    },
+                //    onClose: function (data) {
+                        
+                //    }
+                //});
+
+                $("#roll_1").text("");
+                $("#roll_2").text("");
+                $("#roll_3").text("");
+                $("#roll_4").text("");
+
+                $('#msn')[0].play();
+            });
+
+          
+            
+        </script>
+    }
+
+

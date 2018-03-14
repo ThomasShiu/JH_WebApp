@@ -1,0 +1,141 @@
+﻿@{
+    Layout = "~/Views/Shared/Pickling_Layout.cshtml";
+}
+
+<div class='demos-content-padded'>
+    <div class="weui-cells__title">掃描桿號/卷號</div>
+    <div class="weui-cells weui-cells_form">
+        <div class="weui-cell">
+            <div class="weui-cell__hd"><label class="weui-label">桿號:</label></div>
+            <div class="weui-cell__bd">
+                <input id="poleno" class="weui-input" type="text"  placeholder="請掃描桿號">
+            </div>
+        </div>
+        <div class="weui-cell">
+            <div class="weui-cell__hd"><label class="weui-label">卷號:</label></div>
+            <div class="weui-cell__bd">
+                <input id="rollno" class="weui-input" type="text" placeholder="請掃描卷號">
+            </div>
+        </div>
+       
+        <div class="weui-cell">
+            <div class="weui-cell__hd"><label class="weui-label">卷號1 =></label></div>
+            <div class="weui-cell__bd">
+                <span id="roll_1"></span>
+            </div>
+        </div>
+        <div class="weui-cell">
+            <div class="weui-cell__hd"><label class="weui-label">卷號2 =></label></div>
+            <div class="weui-cell__bd">
+                <span id="roll_2"></span>
+            </div>
+        </div>
+        <div class="weui-cell">
+            <div class="weui-cell__hd"><label class="weui-label">卷號3 =></label></div>
+            <div class="weui-cell__bd">
+                <span id="roll_3"></span>
+            </div>
+        </div>
+        <div class="weui-cell">
+            <div class="weui-cell__hd"><label class="weui-label">卷號4 =></label></div>
+            <div class="weui-cell__bd">
+                <span id="roll_4"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="button_sp_area" style="text-align: center;">
+        <a href="javascript:;"  class="weui-btn weui-btn_mini weui-btn_primary" id="save">下一步</a>
+        <a href="javascript:;" class="weui-btn weui-btn_mini weui-btn_warn" id="clear">清除卷號</a>
+        <a href="/Pickling/Index"  class="weui-btn weui-btn_mini weui-btn_default" id="home">首頁</a>
+    </div>
+</div>
+
+@section scripts {
+<script>
+    var cnt = 1;
+
+    $(function () {
+        FastClick.attach(document.body);
+
+        $.showLoading();
+
+        setTimeout(function () {
+            $.hideLoading();
+        }, 1000)
+
+        $("#poleno").focus();
+    });
+
+    $("#poleno").keyup(function (e) {
+        if (e.keyCode == 13) {
+            if ($("#poleno").val() != "") {
+                $("#rollno").focus();
+            } else {
+                $("#poleno").focus();
+            }
+        }
+    });
+
+    $("#rollno").keyup(function (e) {
+        if (e.keyCode == 13) {
+            if (cnt == 1) {
+                $("#roll_1").text("");
+                $("#roll_2").text("");
+                $("#roll_3").text("");
+                $("#roll_4").text("");
+            }
+            if ($("#rollno").val() != "") {
+                //$("#rollno").focus();
+                var rollno = $("#rollno").val();
+                switch (cnt) {
+                    case 1:
+                        $("#roll_1").text(rollno);
+                        break;
+                    case 2:
+                        $("#roll_2").text(rollno);
+                        break;
+                    case 3:
+                        $("#roll_3").text(rollno);
+                        break;
+                    case 4:
+                        $("#roll_4").text(rollno);
+                        break;
+                    default:
+                        break;
+                } 
+                $("#rollno").val("");
+                $("#rollno").focus();
+                cnt++;
+            }
+            if (cnt >= 5) { cnt = 1 }
+
+            $.toptip('操作成功', 'success');
+        }
+    });
+
+    $("#save").click(function () {
+        $.toast("儲存");
+        $("#roll_1").text("");
+        $("#roll_2").text("");
+        $("#roll_3").text("");
+        $("#roll_4").text("");
+    })
+
+    $("#clear").click(function () {
+        $("#roll_1").text("");
+        $("#roll_2").text("");
+        $("#roll_3").text("");
+        $("#roll_4").text("");
+    })
+
+    $(document).on("click", "#noright", function () {
+        $.alert("您無執行權限！");
+    });
+
+    $(document).on("click", "#notdone", function () {
+        $.alert("未完成，建構中！");
+    });
+</script>
+
+}

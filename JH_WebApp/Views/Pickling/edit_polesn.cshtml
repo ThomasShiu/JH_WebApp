@@ -1,0 +1,77 @@
+﻿@{
+    Layout = "~/Views/Shared/Pickling_Layout.cshtml";
+}
+
+<div class='demos-content-padded'>
+    <div class="weui-cells__title">表單</div>
+    <div class="weui-cells weui-cells_form">
+        <div class="weui-cell">
+            <div class="weui-cell__hd"><label class="weui-label">桿號</label></div>
+            <div class="weui-cell__bd">
+                <input id="poleno" class="weui-input" type="text"  placeholder="請掃描桿號">
+            </div>
+        </div>
+        <div class="weui-cell">
+            <div class="weui-cell__hd"><label class="weui-label">卷號</label></div>
+            <div class="weui-cell__bd">
+                <input id="rollno" class="weui-input" type="text" placeholder="請掃描卷號">
+            </div>
+        </div>
+       
+        <div class="weui-cell">
+            <div class="weui-cell__hd"><label for="" class="weui-label">日期</label></div>
+            <div class="weui-cell__bd">
+                <input class="weui-input" type="date" value="">
+            </div>
+        </div>
+        <div class="weui-cell">
+            <div class="weui-cell__hd"><label for="" class="weui-label">時間</label></div>
+            <div class="weui-cell__bd">
+                <input class="weui-input" type="datetime-local" value="" placeholder="">
+            </div>
+        </div>
+        <div class="weui-cell weui-cell_vcode">
+            <div class="weui-cell__hd"><label class="weui-label">驗證碼</label></div>
+            <div class="weui-cell__bd">
+                <input class="weui-input" type="number" placeholder="請輸入驗證碼">
+            </div>
+            <div class="weui-cell__ft">
+                <img class="weui-vcode-img" src="./images/vcode.jpg">
+            </div>
+        </div>
+    </div>
+
+    <div class="weui-cells__tips">底部說明文字底部說明文字</div>
+    <div class="weui-flex">
+        <div class="weui-flex__item"><a href="javascript:;" class="weui-btn weui-btn_primary">儲存</a></div>
+        <div class="weui-flex__item"><a href="javascript:;" class="weui-btn weui-btn_warn">首頁</a></div>
+    </div>
+    <div class="button_sp_area" style="text-align: center;">
+        <a href="javascript:;" class="weui-btn weui-btn_mini weui-btn_primary" id="open">儲存</a>
+        <a href="javascript:;" class="weui-btn weui-btn_mini weui-btn_default" id="close">首頁</a>
+    </div>
+</div>
+
+@section scripts {
+<script>
+        $(function () {
+            FastClick.attach(document.body);
+
+            $.showLoading();
+
+            setTimeout(function () {
+                $.hideLoading();
+            }, 1000)
+
+        });
+
+        $(document).on("click", "#noright", function () {
+            $.alert("您無執行權限！");
+        });
+
+        $(document).on("click", "#notdone", function () {
+            $.alert("未完成，建構中！");
+        });
+</script>
+
+}

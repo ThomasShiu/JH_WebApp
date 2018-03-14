@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>@ViewBag.Title - JH Mobile Portal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <!--標準mui.css-->
+    <link href="~/Content/js/mui/css/mui.min.css" rel="stylesheet" />
+    <!--App自訂的css-->
+    <!--<link rel="stylesheet" type="text/css" href="../css/app.css"/>-->
+</head>
+
+<body>
+    @RenderBody()
+
+
+</body>
+@Scripts.Render("~/bundles/jquery")
+<script src="~/Content/js/mui/js/mui.min.js"></script>
+<script>
+	mui.init({
+	swipeBack:true //啟用右滑關閉功能
+	});
+</script>
+
+@RenderSection("scripts", required: false)
+</html>

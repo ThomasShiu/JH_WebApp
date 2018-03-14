@@ -1,0 +1,89 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>@ViewBag.Title - JH Mobile Portal</title>
+    <meta name="description" content="MSUI: Build mobile apps with simple HTML, CSS, and JS components.">
+    <meta name="author" content="JH Mobile Portal">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <link rel="shortcut icon" href="/jh.ico">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <!-- Google Web Fonts -->
+    <link href="~/Content/js/light7/dist/css/light7.css?r=201603281" rel="stylesheet" />
+    <link href="~/Content/js/light7/dist/css/light7-swiper.css" rel="stylesheet" />
+    <link href="~/Content/js/light7/dist/css/light7-swipeout.css" rel="stylesheet" />
+    <link href="~/Content/js/light7/assets/css/demos.css" rel="stylesheet" />
+
+    <link rel="apple-touch-icon-precomposed" href="~/Content/js/light7/assets/img/apple-touch-icon-114x114.png">
+
+    
+    <script>
+      //ga
+    </script>
+</head>
+<body>
+
+    @RenderBody()
+
+    <audio id="beeplong" >
+        <source src="~/Content/media/beeplong.mp3" type="audio/mpeg" />
+    </audio>
+    <audio id="beeperror">
+        <source src="~/Content/media/beep_error.mp3" type="audio/mpeg" />
+    </audio>
+    <audio id="icq" >
+        <source src="~/Content/media/icq.mp3" type="audio/mpeg" />
+    </audio>
+    <audio id="msn" >
+        <source src="~/Content/media/msn.mp3" type="audio/mpeg" />
+    </audio>
+
+   
+    @Scripts.Render("~/bundles/jquery")
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/Scripts/framework.js"></script>
+    <script src="~/Content/js/light7/dist/js/light7.js"></script>
+    <script src="~/Content/js/light7/dist/js/light7-swiper.min.js"></script>
+    <script src="~/Content/js/light7/dist/js/light7-city-picker.min.js"></script>
+    <script src="~/Content/js/light7/dist/js/light7-swipeout.js"></script>
+    <script src="~/Content/js/light7/assets/js/demos.js?r=201603281"></script>
+
+    <script>
+         //$.config = {
+         //    autoInit: true, //no recommend
+         //    router: false,
+         //}
+        
+         function GetNow() {
+             var today = new Date();
+             var dd = today.getDate();
+             var mm = today.getMonth() + 1; //January is 0!
+             var hh = today.getHours();
+             //hh = hh % 12;
+             //hh = hh ? hh : 12; // the hour '0' should be '12'
+             hh = hh < 10 ? '0' + hh : hh;
+             var mi = today.getMinutes();
+             mi = mi < 10 ? '0' + mi : mi;
+             var ss = today.getSeconds();
+             ss = ss < 10 ? '0' + ss : ss;
+             var sss = today.getMilliseconds;
+
+             var yyyy = today.getFullYear();
+             if (dd < 10) {
+                 dd = '0' + dd
+             }
+             if (mm < 10) {
+                 mm = '0' + mm
+             }
+             //var now = yyyy + '-' + mm + '-' + dd + ' ' + hh + ':' + mi + ':' + ss;
+             var now = yyyy + '-' + mm + '-' + dd + ' ' + hh + ':' + mi;
+             return now;
+         }
+
+    </script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

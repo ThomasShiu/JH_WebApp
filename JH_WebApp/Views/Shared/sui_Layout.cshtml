@@ -1,0 +1,101 @@
+﻿
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>@ViewBag.Title - JH Mobile Portal</title>
+    <meta name="description" content="MSUI: Build mobile apps with simple HTML, CSS, and JS components.">
+    <meta name="author" content="JH Mobile Portal">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <link rel="shortcut icon" href="/jh.ico">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+
+    <!-- Google Web Fonts -->
+
+    <link href="~/Content/js/sui/dist/css/sm.css" rel="stylesheet" />
+    <link href="~/Content/js/sui/dist/css/sm-extend.css" rel="stylesheet" />
+    <link href="~/Content/js/sui/assets/css/demos.css" rel="stylesheet" />
+
+    <link rel="apple-touch-icon-precomposed" href="~/Content/js/sui/assets/img/apple-touch-icon-114x114.png">
+
+    @*<script src="~/Content/js/sui/assets/js/zepto.js"></script>*@
+    @*<script src="~/Content/js/sui/assets/js/config.js"></script>*@
+    <script>
+      //ga
+    </script>
+    <script>
+        //var _hmt = _hmt || [];
+        //(function () {
+        //    var hm = document.createElement("script");
+        //    hm.src = "//hm.baidu.com/hm.js?ba76f8230db5f616edc89ce066670710";
+        //    var s = document.getElementsByTagName("script")[0];
+        //    s.parentNode.insertBefore(hm, s);
+        //})();
+    </script>
+
+</head>
+<body>
+
+    @RenderBody() 
+    <audio id="beeplong">
+        <source src="~/Content/media/beeplong.mp3" type="audio/mpeg" />
+    </audio>
+    <audio id="beeperror">
+        <source src="~/Content/media/beep_error.mp3" type="audio/mpeg" />
+    </audio>
+    <audio id="icq">
+        <source src="~/Content/media/icq.mp3" type="audio/mpeg" />
+    </audio>
+    <audio id="msn">
+        <source src="~/Content/media/msn.mp3" type="audio/mpeg" />
+    </audio>
+    @Scripts.Render("~/bundles/jquery")
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/Scripts/framework.js"></script>
+
+    <script src="~/Content/js/sui/assets/js/zepto.js"></script>
+    <script src="~/Content/js/sui/assets/js/config.js"></script>
+    <script src="~/Content/js/sui/dist/js/sm.js"></script>
+    <script src="~/Content/js/sui/dist/js/sm-extend.js"></script>
+    <script src="~/Content/js/sui/dist/js/sm-city-picker.js"></script>
+
+    <script>
+        //$.config = {
+        //    autoInit: true, //no recommend
+        //    router: false,
+        //}
+
+        function GetNow() {
+            var today = new Date();
+            var dd = today.getDate();
+            var mm = today.getMonth() + 1; //January is 0!
+            var hh = today.getHours();
+            //hh = hh % 12;
+            //hh = hh ? hh : 12; // the hour '0' should be '12'
+            hh = hh < 10 ? '0' + hh : hh;
+            var mi = today.getMinutes();
+            mi = mi < 10 ? '0' + mi : mi;
+            var ss = today.getSeconds();
+            ss = ss < 10 ? '0' + ss : ss;
+            var sss = today.getMilliseconds;
+
+            var yyyy = today.getFullYear();
+            if (dd < 10) {
+                dd = '0' + dd
+            }
+            if (mm < 10) {
+                mm = '0' + mm
+            }
+            //var now = yyyy + '-' + mm + '-' + dd + ' ' + hh + ':' + mi + ':' + ss;
+            var now = yyyy + '-' + mm + '-' + dd + ' ' + hh + ':' + mi;
+            return now;
+        }
+
+    </script>
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>

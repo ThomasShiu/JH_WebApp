@@ -1,0 +1,116 @@
+﻿@{
+    ViewBag.Title = "桿次IO時間";
+    Layout = "~/Views/Shared/sui_Layout.cshtml";
+}
+<div class="page-group">
+    <div id="page-fixed-tab" class="page theme-dark">
+        <header class="bar bar-nav">
+            <a class="button button-link button-nav pull-left back" href="javascript:void(0)" onclick="window.history.back();">
+                <span class="icon icon-left"></span>
+                返回
+            </a>
+            <h1 class="title">桿次IO時間</h1>
+        </header>
+        <div class="bar bar-standard bar-footer">
+            <a class="icon icon-edit pull-left"></a>
+            <a class="icon icon-settings pull-right"></a>
+        </div>
+        <div class="content">
+            <div class="list-block media-list inset">
+                <ul>
+                    <li>
+
+                        <div class="item-inner">
+                            <div class="item-title-row">
+                                <div class="item-title">桿次:20180312001</div>
+                                <div class="item-after">桿號:001</div>
+                            </div>
+                            <div class="item-subtitle">卷號</div>
+                            <div class="item-text">
+                                <div class="row">
+                                    <div class="col-100">CD897 010033,SCM435RCH,16<br />CD897 010033,SCM435RCH,16</div>
+                                </div>
+                            </div>
+                            <div class="item-text">
+                                <div class="row">
+                                    <div class="col-100">CD897 010033,SCM435RCH,16<br /></div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </li>
+                </ul>
+            </div>
+            <!-- 標籤頁-->
+            <div class="buttons-tab fixed-tab" data-offset="44">
+                <a href="#tab1" class="tab-link active button">時間</a>
+
+            </div>
+
+            <div class="tabs">
+                <div id="tab1" class="tab active">
+                    <div class="content-block">
+                        <ul id="polelist" onload="GetPoleList"></ul>
+                    </div>
+                </div>
+               
+            </div>
+        </div>
+    </div>
+
+</div>
+</div>
+@section scripts {
+    <script>
+        var v_polesn = $.request("polesn");
+        $(function () {
+            GetPoleIO();
+        });
+
+        // 取得桿次資料
+        function GetPoleIO() {
+            //$.showPreloader();
+
+            // 顯示已選取幾筆
+            setTimeout(function () {
+                $.ajax({
+                    type: "get",
+                    url: "/Pickling/GetPoleIO",
+                    data: { polesn: v_polesn },
+                    dataType: "json",
+                    cache: false,
+                    async: true,
+                    success: function (data) {
+                        //MACHINE_NAME,MO_LIST,TYPE1,SDT,TASK,COLOR
+                        var trHTML = '';
+
+                        $.each(data.pole, function (i, item) {
+                            trHTML += '<li>';
+                            trHTML += '<div class="item-inner"><div class="item-title-row">';
+                            trHTML += '<div class="item-title">槽號:' + data.pole[i].POOLNO + '</div>';
+                            trHTML += '</div><div class="item-text"><div class="row">';
+                            trHTML += '<div class="col-15">開始:</div><div class="col-35">:' + data.pole[i].BDT + '</div></div><div class="row">';
+                            trHTML += '<div class="col-15">結束:</div><div class="col-35">:' + data.pole[i].LEAD_EDT + '</div>';
+                            trHTML += '</div></div></div></div></li>';
+                        });
+
+                        $('#polelist').empty();
+                        $('#polelist').append(trHTML);
+                        $('#polelist').trigger('create');
+                        //$('#empcontact').listview('refresh');
+
+                        //$.hidePreloader();
+                        //$.toast("讀取桿次資料");
+                    },
+                    error: function (msg) {
+                        //alert(msg.responseText);
+                        //$.hidePreloader();
+                        $.toast("讀取桿次資料發生錯誤");
+                    }
+                });
+
+            }, 60);
+        }
+    </script>
+}
+

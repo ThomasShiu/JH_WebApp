@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>@ViewBag.Title - JH Mobile Portal</title>
+    <meta name="description" content="MSUI: Build mobile apps with simple HTML, CSS, and JS components.">
+    <meta name="author" content="JH Mobile Portal">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <link rel="shortcut icon" href="/jh.ico">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+
+    <link href="~/Content/js/weui/lib/weui.min.css" rel="stylesheet" />
+    <link href="~/Content/js/weui/css/jquery-weui.min.css" rel="stylesheet" />
+    <link href="~/Content/js/weui/demos/css/demos.css" rel="stylesheet" />
+
+
+
+</head>
+
+<body ontouchstart>
+    @RenderBody()
+</body>
+
+</html>
+<audio id="beeplong" >
+    <source src="~/Content/media/beeplong.mp3" type="audio/mpeg" />
+</audio>
+<audio id="beeperror">
+    <source src="~/Content/media/beep_error.mp3" type="audio/mpeg" />
+</audio>
+<audio id="icq">
+    <source src="~/Content/media/icq.mp3" type="audio/mpeg" />
+</audio>
+<audio id="msn">
+    <source src="~/Content/media/msn.mp3" type="audio/mpeg" />
+</audio>
+
+<script src="~/Content/js/weui/lib/jquery-2.1.4.js"></script>
+<script src="~/Content/js/weui/js/jquery-weui.js"></script>
+<script src="~/Content/js/weui/lib/fastclick.js"></script>
+@RenderSection("scripts", required: false)
