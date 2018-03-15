@@ -4,13 +4,16 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>@ViewBag.Title - JH Mobile Portal</title>
-    <meta name="description" content="MSUI: Build mobile apps with simple HTML, CSS, and JS components.">
-    <meta name="author" content="JH Mobile Portal">
-    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
-    <link rel="shortcut icon" href="/jh.ico">
+    <meta name="google-site-verification" content="Fswng2jn4YU3_0HnvUp3DpY-zID8roztsU0f5enPppo" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="mobile-web-app-capable" content="yes" />
+    <!-- 隱藏底部 iPhone button bar -->
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <!-- 更改 status bar 樣式 -->
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="format-detection" content="telephone=no">
+    <link rel="shortcut icon" href="/jh.ico">
+    <link media="only screen and (max-device-width: 480px)" href="small-device.css" type="text/css" rel="stylesheet">
     <!-- Google Web Fonts -->
     <link href="~/Content/js/light7/dist/css/light7.css?r=201603281" rel="stylesheet" />
     <link href="~/Content/js/light7/dist/css/light7-swiper.css" rel="stylesheet" />
@@ -22,6 +25,11 @@
     
     <script>
       //ga
+        window.onload = function () {
+            setTimeout(function () {
+                window.scrollTo(0, 1);
+            }, 100);
+        }
     </script>
 </head>
 <body>
