@@ -202,11 +202,26 @@
             contentType: false,
             processData: true,
             success: function (data) {
-                $.toast('儲存成功');
+                //$.toast('儲存成功');
                 $('#msn')[0].play();
                 // 儲存成功，回首頁
                 if (data != '') {
-                    location.href = '/Pickling/BarcodeScan';
+
+                    $.confirm('儲存成功', '回首頁',
+                        function () {
+                        location.href = '/Pickling/BarcodeScan';
+                        },
+                        function () {
+                            location.href = '/Pickling/BarcodeScan';
+                        },
+                    );
+                    //$.showPreloader();
+                    //setTimeout(function () {
+                    //    $.hidePreloader();
+                    //    location.href = '/Pickling/BarcodeScan';
+                    //}, 1000);
+                   
+                    
                 }
 
             }, error: function () { //請求失敗
@@ -240,13 +255,22 @@
                     
                     // 儲存成功，回首頁
                     if (data == 'success') {
-                        $.toast('此卷完工');
+                        //$.toast('此卷完工');
                         $('#msn')[0].play();
 
-                        setTimeout(function () {
-                            location.href = '/Pickling/BarcodeScan';
-                        }, 500)
-                        
+                        $.confirm('此卷完工', '回首頁',
+                            function () {
+                                location.href = '/Pickling/BarcodeScan';
+                            },
+                            function () {
+                                location.href = '/Pickling/BarcodeScan';
+                            },
+                        );
+                        //$.showPreloader();
+                        //setTimeout(function () {
+                        //    $.hidePreloader();
+                        //    location.href = '/Pickling/BarcodeScan';
+                        //}, 1000);
                     }
 
                 }, error: function () { //請求失敗
