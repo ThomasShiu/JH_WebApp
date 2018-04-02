@@ -2,6 +2,7 @@
     ViewBag.Title = "桿次入料時間";
     Layout = "~/Views/Shared/light7_Layout.cshtml";
 }
+
 <div class="page-group ">
     <div id="page-label-input" class="page theme-dark">
 
@@ -30,7 +31,7 @@
                 </ul>
             </div>
             <div class="list-block media-list">
-                
+
                 <ul>
                     <li>
                         @*<a href="#" class="item-link item-content">*@
@@ -41,12 +42,16 @@
                             </div>
                             <div class="item-text">
                                 <div class="row">
-                                    <div class="col-50"><span id="rollno1"></span></div>
-                                    <div class="col-50"><span id="rollno2"></span></div>
+                                    <div class="col-50"><h3><span id="rollno1"></span></h3></div>
+                                    <div class="col-50"><h3><span id="rollno2"></span></h3></div>
                                 </div>
+                               
+                            </div>
+                            <div class="item-text">
+
                                 <div class="row">
-                                    <div class="col-50"><span id="rollno3"></span></div>
-                                    <div class="col-50"><span id="rollno4"></span></div>
+                                    <div class="col-50"><h3><span id="rollno3"></span></h3></div>
+                                    <div class="col-50"><h3><span id="rollno4"></span></h3></div>
                                 </div>
                             </div>
                         </div>
@@ -90,26 +95,29 @@
         </div>
     </div>
 
-</div>   
+</div>
 
 @section scripts {
 <script>
     var v_type = $.request("type");
     var v_polesn = $.request("polesn");
 
+   
+
     var cnt = 1;
     $(function () {
+        $.toast("type:" + v_type + ",polesn:" + v_polesn);
 
         // 顯示桿次資料
         GetPoleData();
 
         $('input:text').focus(
             function () {
-                $(this).css({ 'background-color': '#ff9999' });
+                $(this).css({ 'background-color': '#ff6666' });
             });
         $('input:text').blur(
             function () {
-                $(this).css({ 'background-color': '#262626' });
+                $(this).css({ 'background-color': '#333333' });
             });
 
         $("#poolno").focus();
@@ -131,14 +139,14 @@
             $("#edt").val(GetNow());
         }
 
-        
+
     });
 
 
 
-    // 顯示桿次資料    
+    // 顯示桿次資料
     function GetPoleData() {
-        $.showPreloader();
+        //$.showPreloader();
         $.ajax({
             type: "get",
             url: "/Pickling/GetPoleList2",
@@ -149,7 +157,7 @@
             success: function (data) {
                 //MACHINE_NAME,MO_LIST,TYPE1,SDT,TASK,COLOR
                 var trHTML = '';
-
+                $('#beeplong')[0].play();
                 $.each(data.pole, function (i, item) {
                     var v_polesn = data.pole[i].POLESN;
                     var v_poleno = data.pole[i].POLENO;
@@ -167,12 +175,13 @@
 
                 });
 
-                $.hidePreloader();
+                //$.hidePreloader();
                 $.toast("讀取桿次資料");
+                $('#beeplong')[0].play();
             },
             error: function (msg) {
                 //alert(msg.responseText);
-                $.hidePreloader();
+                //$.hidePreloader();
                 $.toast("讀取桿次資料發生錯誤");
             }
         });
@@ -185,12 +194,20 @@
         var v_bdt = $("#bdt").val();
         var v_edt = "";
         var poledata = {
-            
             polesn: v_polesn,
             poolno: v_poolno,
             bdt: v_bdt,
             edt: v_edt,
         }
+
+        if (v_poolno=="") { 
+            $.toast('請輸入槽號!');
+            $("#poolno").focus();
+            $('#beeplong')[0].play();
+            return;
+        }
+
+
         // 儲存入料時間
         $.ajax({
             type: 'GET',
@@ -202,28 +219,21 @@
             contentType: false,
             processData: true,
             success: function (data) {
-                //$.toast('儲存成功');
-                $('#msn')[0].play();
-                // 儲存成功，回首頁
-                if (data != '') {
+                if (data == 'success') {
+                    $.toast('儲存成功');
 
-                    $.confirm('儲存成功', '回首頁',
-                        function () {
-                        location.href = '/Pickling/BarcodeScan';
-                        },
-                        function () {
+                    $('#beeplong')[0].play();
+
+                    // 儲存成功，回首頁
+                    if (data != '') {
+                        setTimeout(function () {
                             location.href = '/Pickling/BarcodeScan';
-                        },
-                    );
-                    //$.showPreloader();
-                    //setTimeout(function () {
-                    //    $.hidePreloader();
-                    //    location.href = '/Pickling/BarcodeScan';
-                    //}, 1000);
-                   
-                    
-                }
+                        }, 500);
 
+                    }
+                } else {
+                    $.toast('儲存失敗');
+                }
             }, error: function () { //請求失敗
                 $.toast('Error');
             }
@@ -231,10 +241,14 @@
 
     });
 
-        
+
     $("#cancel").click(function () {
-        $.confirm('確定要取消嗎?','回首頁', function () {
-            location.href = '/Pickling/BarcodeScan';
+        $.confirm('確定要取消嗎?', '回首頁', function () {
+            $('#beeplong')[0].play();
+            setTimeout(function () {
+                location.href = '/Pickling/BarcodeScan';
+            }, 500);
+            
         });
 
     });
@@ -252,25 +266,17 @@
                 contentType: false,
                 processData: true,
                 success: function (data) {
-                    
+
                     // 儲存成功，回首頁
                     if (data == 'success') {
-                        //$.toast('此卷完工');
                         $('#msn')[0].play();
 
-                        $.confirm('此卷完工', '回首頁',
-                            function () {
-                                location.href = '/Pickling/BarcodeScan';
-                            },
-                            function () {
-                                location.href = '/Pickling/BarcodeScan';
-                            },
-                        );
-                        //$.showPreloader();
-                        //setTimeout(function () {
-                        //    $.hidePreloader();
-                        //    location.href = '/Pickling/BarcodeScan';
-                        //}, 1000);
+                        $.toast('此卷完工');
+                        $('#beeplong')[0].play();
+                        setTimeout(function () {
+                            location.href = '/Pickling/BarcodeScan';
+                        }, 900)
+
                     }
 
                 }, error: function () { //請求失敗

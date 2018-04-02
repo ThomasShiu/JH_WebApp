@@ -876,7 +876,9 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Configs\system.config" />
+    <Content Include="Configs\system.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Content\js\mui\.project" />
     <Content Include="Content\js\mui\fonts\mui-icons-extra.ttf" />
     <Content Include="Content\js\mui\fonts\mui.ttf" />
@@ -890,11 +892,11 @@
     <Content Include="Content\js\toastr\toastr.js.map" />
     <Content Include="Content\js\jquerymobile\js\jquery.mobile-1.4.5.min.map" />
     <None Include="Properties\PublishProfiles\jh_webapi_19.pubxml" />
+    <Content Include="Scripts\jquery-2.2.1.js" />
+    <Content Include="Scripts\jquery-2.2.1.min.js" />
+    <Content Include="Scripts\jquery-2.2.1.min.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
-    <None Include="Scripts\jquery-1.7-vsdoc.js" />
     <Content Include="Scripts\framework.js" />
-    <Content Include="Scripts\jquery-1.7.js" />
-    <Content Include="Scripts\jquery-1.7.min.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
@@ -904,6 +906,7 @@
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\URI.js" />
+    <Content Include="SQLScript\CHK_PROCESS.SQL" />
     <Content Include="SQLScript\INOUT_PICKLING.SQL" />
     <Content Include="SQLScript\GEN_POLESN.SQL" />
     <Content Include="SQLScript\POLE_PICKLING_QUERY2.SQL" />

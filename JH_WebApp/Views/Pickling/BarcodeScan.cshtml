@@ -132,11 +132,11 @@
 
                 $('input:text').focus(
                     function () {
-                        $(this).css({ 'background-color': '#ff9999' });
+                        $(this).css({ 'background-color': '#ff6666' });
                     });
                 $('input:text').blur(
                     function () {
-                        $(this).css({ 'background-color': '#262626' });
+                        $(this).css({ 'background-color': '#333333' });
                     });
 
                 $("#poleno").focus();
@@ -181,7 +181,10 @@
                         if (data.pole.length > 0) {
                             $.toast('有桿號資料');
                             // 有桿次資料前往 [選擇桿次]頁面
-                            location.href = '/Pickling/PolesnChoice?poleno=' + v_poleno;
+                            setTimeout(function () {
+                                location.href = '/Pickling/PolesnChoice?poleno=' + v_poleno;
+                            }, 500);
+                            
 
                         }
                     }, error: function () { //請求失敗

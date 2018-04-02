@@ -146,5 +146,23 @@ namespace JH_WebApp.Controllers
 
            
         }
+
+        // 檢查上製程是否為W2
+        [HttpGet]
+        [HandlerAjaxOnly]
+        public ActionResult CheckProcess(string polesn)
+        {
+            var result = picks.CheckProcess(polesn);
+            return Content(result);
+        }
+
+        // 更新W2 時間
+        [HttpGet]
+        [HandlerAjaxOnly]
+        public ActionResult SavePoleout(string poledata)
+        {
+            var result = picks.savePoolout(poledata);
+            return Content(result);
+        }
     }
 }

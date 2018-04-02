@@ -2,69 +2,68 @@
     ViewBag.Title = "桿次出料時間";
     Layout = "~/Views/Shared/light7_Layout.cshtml";
 }
+
 <div class="page-group ">
-    <div id="page-label-input" class="page theme-dark">
+    <div id="page-label-input" class="page theme-green">
 
         <header class="bar bar-nav">
             <a class="button button-link button-nav pull-left back" href="javascript:void(0)" onclick="window.history.back();">
                 <span class="icon icon-left"></span>
                 返回
             </a>
+            <a class="icon icon-refresh pull-right" onclick="$.reload()"></a>
             <h1 class="title">桿次出料時間</h1>
         </header>
 
         <div class="content">
-
-                <div class="list-block media-list inset">
-                    <ul>
-                        <li>
-                            @*<a href="#" class="item-link item-content">*@
-                            <div class="item-inner">
-                                <div class="item-title-row">
-                                    <div class="item-title">桿次:20180309-001</div>
-                                    <div class="item-after">001</div>
-                                </div>
-                                <div class="item-text">
-                                    <div class="row">
-                                        <div class="col-15">卷1:</div>
-                                        <div class="col-35">12121212</div>
-                                        <div class="col-15">卷2:</div>
-                                        <div class="col-35">214135264</div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-15">卷3:</div>
-                                        <div class="col-35">92394996</div>
-                                        <div class="col-15">卷4:</div>
-                                        <div class="col-35">08702058235</div>
-                                    </div>
-                                </div>
-                            </div>
-                            @*</a>*@
-                        </li>
-                    </ul>
-
-                </div>
-
-
-
             <div class="list-block">
                 <ul>
                     <!-- Text inputs -->
                     <li>
                         <div class="item-content">
                             <div class="item-inner">
-                                <div class="item-title label">入料時間</div>
+                                <div class="item-title label">槽號:</div>
                                 <div class="item-input">
-                                    <div><h3><span>2018-03-11 14:30</span></h3></div>
-                                    @*<input type="text" placeholder="" id='bdt' value="2018-03-11 14:30" disabled="disabled"/>*@
+                                    <input id='poolno' type="text" placeholder="" value="W2" disabled="disabled"/>
                                 </div>
                             </div>
                         </div>
                     </li>
                 </ul>
+            </div>
+            <div class="list-block media-list">
+
                 <ul>
-                    <!-- Text inputs -->
                     <li>
+                        @*<a href="#" class="item-link item-content">*@
+                        <div class="item-inner">
+                            <div class="item-title-row">
+                                <div class="item-title">桿次:<span id="polesn"></span></div>
+                                <div class="item-after">桿號:<span id="poleno"></span></div>
+                            </div>
+                            <div class="item-text">
+                                <div class="row">
+                                    <div class="col-50"><h3><span id="rollno1"></span></h3></div>
+                                    <div class="col-50"><h3><span id="rollno2"></span></h3></div>
+                                </div>
+
+                            </div>
+                            <div class="item-text">
+
+                                <div class="row">
+                                    <div class="col-50"><h3><span id="rollno3"></span></h3></div>
+                                    <div class="col-50"><h3><span id="rollno4"></span></h3></div>
+                                </div>
+                            </div>
+                        </div>
+                        @*</a>*@
+                    </li>
+                </ul>
+            </div>
+            <div class="list-block">
+                <ul id="inout">
+                    <!-- Text inputs -->
+                    <li id="edt_block">
                         <div class="item-content">
                             <div class="item-inner">
                                 <div class="item-title label">出料時間</div>
@@ -76,13 +75,11 @@
                     </li>
                 </ul>
             </div>
-
-
-
             <div class="content-block">
                 <div class="row">
-                    <div id="cancel" class="col-50"><a href="javascript:void(0)" class="button button-big button-fill button-danger">取消</a></div>
-                    <div id="finish" class="col-50"><a href="javascript:void(0)" class="button button-big button-fill button-success external">完成</a></div>
+                    <div id="cancel" class="col-50"><a href="#" class="button button-big button-fill button-danger">取消</a></div>
+                    @*<div id="done" class="col-33"><a href="#" class="button button-big button-fill ">完工</a></div>*@
+                    <div id="finish" class="col-50"><a href="#" class="button button-big button-fill button-success external">儲存</a></div>
                 </div>
             </div>
 
@@ -90,99 +87,182 @@
     </div>
 
 </div>
-
 @section scripts {
     <script>
+        var v_type = $.request("type");
+        var v_polesn = $.request("polesn");
+
         var cnt = 1;
         $(function () {
+            $.toast("type:" + v_type + ",polesn:" + v_polesn);
 
+            // 顯示桿次資料
+            GetPoleData();
 
             $('input:text').focus(
                 function () {
-                    $(this).css({ 'background-color': '#ff9999' });
+                    $(this).css({ 'background-color': '#d9d9d9' });
                 });
             $('input:text').blur(
                 function () {
-                    $(this).css({ 'background-color': '#262626' });
+                    $(this).css({ 'background-color': '#d9d9d9' });
                 });
+
+            $("#poolno").focus();
+
 
             $("#edt").datetimePicker({
                 toolbarTemplate: '<header class="bar bar-nav">\<button class="button button-link pull-right close-picker">確認</button>\<h1 class="title">選擇時間</h1>\</header>'
             });
-            $("#edt").focus();
-
+            //$("#edt").focus();
             $("#edt").val(GetNow());
+
+
         });
 
 
 
-        $("#poleno").keyup(function (e) {
-            if (e.keyCode == 13) {
-                if ($("#poleno").val() != "") {
-                    $("#rollno").focus();
-                } else {
-                    $("#poleno").focus();
-                }
-            }
-        });
+        // 顯示桿次資料
+        function GetPoleData() {
+            //$.showPreloader();
+            $.ajax({
+                type: "get",
+                url: "/Pickling/GetPoleList2",
+                data: { polesn: v_polesn },
+                dataType: "json",
+                cache: false,
+                async: true,
+                success: function (data) {
+                    //MACHINE_NAME,MO_LIST,TYPE1,SDT,TASK,COLOR
+                    var trHTML = '';
+                    $('#beeplong')[0].play();
+                    $.each(data.pole, function (i, item) {
+                        var v_polesn = data.pole[i].POLESN;
+                        var v_poleno = data.pole[i].POLENO;
+                        var v_rollno1 = data.pole[i].ROLLNO_1;
+                        var v_rollno2 = data.pole[i].ROLLNO_2;
+                        var v_rollno3 = data.pole[i].ROLLNO_3;
+                        var v_rollno4 = data.pole[i].ROLLNO_4;
 
-        $("#rollno").keyup(function (e) {
-            if (e.keyCode == 13) {
-                if (cnt == 1) {
-                    $("#roll_1").text("");
-                    $("#roll_2").text("");
-                    $("#roll_3").text("");
-                    $("#roll_4").text("");
-                }
-                if ($("#rollno").val() != "") {
-                    //$("#rollno").focus();
-                    var rollno = $("#rollno").val();
-                    switch (cnt) {
-                        case 1:
-                            $("#roll_1").text(rollno);
-                            break;
-                        case 2:
-                            $("#roll_2").text(rollno);
-                            break;
-                        case 3:
-                            $("#roll_3").text(rollno);
-                            break;
-                        case 4:
-                            $("#roll_4").text(rollno);
-                            break;
-                        default:
-                            break;
-                    }
-                    $("#rollno").val("");
-                    $("#rollno").focus();
-                    cnt++;
-                }
-                if (cnt >= 5) { cnt = 1 }
+                        $('#polesn').text(v_polesn);
+                        $('#poleno').text(v_poleno);
+                        $('#rollno1').text('卷1: ' + v_rollno1);
+                        $('#rollno2').text('卷2: ' + v_rollno2);
+                        $('#rollno3').text('卷3: ' + v_rollno3);
+                        $('#rollno4').text('卷4: ' + v_rollno4);
 
-                $.toptip('操作成功', 'success');
-            }
-        });
+                    });
 
+                    //$.hidePreloader();
+                    $.toast("讀取桿次資料");
+                    $('#beeplong')[0].play();
+                },
+                error: function (msg) {
+                    //alert(msg.responseText);
+                    //$.hidePreloader();
+                    $.toast("讀取桿次資料發生錯誤");
+                }
+            });
+        }
+
+        // 儲存
         $("#finish").click(function () {
-            $('#msn')[0].play();
-            $.toast('操作成功，已儲存入料時間...', 2345, 'success top');
-            setTimeout(function () {
-                location.href = '/Pickling/BarcodeScan';
-            }, 1000);
+            var v_polesn = $("#polesn").text();
+            var v_poolno = $("#poolno").val();
+            var v_edt = $("#edt").val();
 
-        });
+            var poledata = {
+                polesn: v_polesn,
+                poolno: v_poolno,
+                edt: v_edt,
+            }
 
-        $("#cancel").click(function () {
+            if (v_poolno == "") {
+                $.toast('請輸入槽號!');
+                $("#poolno").focus();
+                $('#beeplong')[0].play();
+                return;
+            }
 
-            $.confirm('確定要取消嗎?', '回首頁', function () {
-                location.href = '/Pickling/BarcodeScan';
-              
+
+            // 寫入出料時間
+            $.ajax({
+                type: 'GET',
+                url: "/Pickling/SavePoleout",
+                data: { poledata: JSON.stringify(poledata) },
+                dataType: "text",
+                async: true,
+                cache: false,
+                contentType: false,
+                processData: true,
+                success: function (data) {
+                    if (data == 'success') {
+                        $.toast('儲存成功，繼續入料作業');
+                        //$.toast(data);
+
+                        $('#beeplong')[0].play();
+
+                        // 儲存成功，轉至入料
+                        setTimeout(function () {
+                            location.href = '/Pickling/PolesnInPool?type=in&polesn=' + v_polesn;
+                        }, 1200);
+                    } else {
+                        $.toast('儲存失敗。' + v_polesn + "," + v_poolno + "," + v_edt);
+                    }
+                }, error: function () { //請求失敗
+                    $.toast('Error');
+                }
             });
 
         });
 
 
+        $("#cancel").click(function () {
+            $.confirm('確定要取消嗎?', '回首頁', function () {
+                $('#beeplong')[0].play();
+                setTimeout(function () {
+                    location.href = '/Pickling/BarcodeScan';
+                }, 500);
+
+            });
+
+        });
+
+        $("#done").click(function () {
+            $.confirm('確定要完工嗎?', '完工', function () {
+                // 儲存入料時間
+                $.ajax({
+                    type: 'GET',
+                    url: "/Pickling/SetPoleDone",
+                    data: { polesn: v_polesn },
+                    dataType: "text",
+                    async: true,
+                    cache: false,
+                    contentType: false,
+                    processData: true,
+                    success: function (data) {
+
+                        // 儲存成功，回首頁
+                        if (data == 'success') {
+                            $('#msn')[0].play();
+
+                            $.toast('此卷完工');
+                            $('#beeplong')[0].play();
+                            setTimeout(function () {
+                                location.href = '/Pickling/BarcodeScan';
+                            }, 900)
+
+                        }
+
+                    }, error: function () { //請求失敗
+                        $.toast('Error');
+                    }
+                });
+            });
+
+        });
 
     </script>
 }
+
 

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 
@@ -14,6 +15,7 @@ namespace JH_WebApp
     {       
         static string connStr = "OracleDbContext";
         //ConnOracle connOra = new ConnOracle();
+        string v_sql = "";
 
         #region  儲存入料時間
         public String SavePolein(string poledata)
@@ -21,38 +23,43 @@ namespace JH_WebApp
             string v_polesn = "", v_poolno = "", v_bdt = "", v_edt = "";
 
             var queryParam = poledata.ToJObject();
-           
-            if (!queryParam["polesn"].IsEmpty())
+
+            try
             {
-                v_polesn = queryParam["polesn"].ToString();
-            }
-            if (!queryParam["poolno"].IsEmpty())
-            {
-                v_poolno = queryParam["poolno"].ToString();
-            }
-            if (!queryParam["bdt"].IsEmpty())
-            {
-                v_bdt = queryParam["bdt"].ToString();
-            }
-            if (!queryParam["edt"].IsEmpty())
-            {
-                v_edt = queryParam["edt"].ToString();
-            }
-            JArray InsertArray = new JArray();
-            var colObject = new JObject
+                if (!queryParam["polesn"].IsEmpty())
                 {
-                 
+                    v_polesn = queryParam["polesn"].ToString();
+                }
+                if (!queryParam["poolno"].IsEmpty())
+                {
+                    v_poolno = queryParam["poolno"].ToString();
+                }
+                if (!queryParam["bdt"].IsEmpty())
+                {
+                    v_bdt = queryParam["bdt"].ToString();
+                }
+                if (!queryParam["edt"].IsEmpty())
+                {
+                    v_edt = queryParam["edt"].ToString();
+                }
+                JArray InsertArray = new JArray();
+                var colObject = new JObject
+                {
+
                    {"POLESN",v_polesn },
                    {"POOLNO",v_poolno },
                    {"BDT",v_bdt },
                    {"EDT",v_edt },
-                   
-                };
-            InsertArray.Add(colObject);
-            // 寫入桿號卷號資料
-            var res = insertPool(InsertArray);
 
-            return v_polesn;
+                };
+                InsertArray.Add(colObject);
+                // 寫入桿號卷號資料
+                var res = insertPool(InsertArray);
+
+                return "success";
+            }catch{
+                return "error";
+            }
 
         }
 
@@ -63,7 +70,7 @@ namespace JH_WebApp
         {
             string v_polesn="", v_poleno="", v_rollno1="", v_rollno2="", v_rollno3="", v_rollno4="",v_rust="",v_pdate="";
 
-            var v_sql = SQLSyntaxHelper.ReadSQLFile("GEN_POLESN.SQL");
+            v_sql = SQLSyntaxHelper.ReadSQLFile("GEN_POLESN.SQL");
             v_sql = string.Format(v_sql).Replace("\r\n", " ");
             //得到一個DataTable物件
             DataTable dt = queryDataTable(v_sql, connStr);
@@ -132,7 +139,6 @@ namespace JH_WebApp
         #region  查詢桿次資料 - ChoicePole , PolesnInPool PolesnOutPool
         public JArray GetPoleData(string v_type, string v_pole)
         {
-            string v_sql = "";
 
             if (v_type.Equals("poleno"))
             {
@@ -186,7 +192,6 @@ namespace JH_WebApp
         #region  桿號資料
         public JArray GetPolesnList(string keyword = "")
         {
-            string v_sql = "";
             v_sql = SQLSyntaxHelper.ReadSQLFile("POLE_PICKLING_QUERY3.SQL");
          
             v_sql = string.Format(v_sql, keyword).Replace("\r\n"," ");
@@ -232,7 +237,6 @@ namespace JH_WebApp
         #region  桿次IO
         public JArray GetPoleIO(string v_polesn = "")
         {
-            string v_sql = "";
             v_sql = SQLSyntaxHelper.ReadSQLFile("INOUT_PICKLING.SQL");
 
             v_sql = string.Format(v_sql, v_polesn).Replace("\r\n", " ");
@@ -254,7 +258,7 @@ namespace JH_WebApp
                              ROLLNO_3 = p.Field<string>("ROLLNO_3"),
                              ROLLNO_4 = p.Field<string>("ROLLNO_4"),
                              FINISHED = p.Field<string>("FINISHED"),
-
+                             GAP_MIN = p.Field<Decimal?>("GAP_MIN"),
                          };
 
             int totalCount = detail.Count();
@@ -272,6 +276,7 @@ namespace JH_WebApp
                    {"ROLLNO_3",col.ROLLNO_3 },
                    {"ROLLNO_4",col.ROLLNO_4 },
                    {"FINISHED",col.FINISHED },
+                   {"GAP_MIN",col.GAP_MIN },
                 };
                 MixArray.Add(colObject);
             }
@@ -460,6 +465,84 @@ namespace JH_WebApp
                     objConn.Open();
                     pPOLESN.Value = polesn;
                     objCmd.ExecuteNonQuery();
+                    return "success";
+                }
+                catch (Exception ex)
+                {
+                    objCmd.Dispose();
+                    objConn.Dispose();
+                    objConn.Close();
+                    return "error";
+                    throw ex;
+                }
+                finally
+                {
+                    objCmd.Dispose();
+                    objConn.Dispose();
+                    objConn.Close();
+                }
+            }
+
+        }
+        #endregion
+
+        #region  檢查上製程是否為W2
+        public String CheckProcess(string v_polesn)
+        {
+            String v_process = "";
+            v_sql = SQLSyntaxHelper.ReadSQLFile("CHK_PROCESS.SQL");
+
+            v_sql = string.Format(v_sql, v_polesn).Replace("\r\n", " ");
+            //得到一個DataTable物件
+            DataTable dt = queryDataTable(v_sql, connStr);
+
+            // 找該桿次最後製程是否為W2
+            if (dt.Rows.Count > 0) { v_process = dt.Select()[0]["POOLNO"].ToString(); }
+
+            return v_process;
+  
+        }
+        #endregion
+
+        #region 更新W2出料時間
+        public string savePoolout(string poledata)
+        {
+            string v_polesn = "", v_poolno = "",v_edt = "";
+            
+            var queryParam = poledata.ToJObject();
+            if (!queryParam["polesn"].IsEmpty())
+            {
+                v_polesn = queryParam["polesn"].ToString();
+            }
+            if (!queryParam["poolno"].IsEmpty())
+            {
+                v_poolno = queryParam["poolno"].ToString();
+            }
+            if (!queryParam["edt"].IsEmpty())
+            {
+                v_edt = queryParam["edt"].ToString();
+            }
+
+          
+            using (OracleConnection objConn = new OracleConnection(
+                  ConfigurationManager.ConnectionStrings[connStr].ConnectionString))
+            {
+
+                OracleCommand objCmd = new OracleCommand();
+                objCmd.Connection = objConn;
+                objCmd.CommandText = " UPDATE MES_INOUT_PICKLING SET EDT= TO_DATE('"+v_edt+ "', 'YYYY-MM-DD HH24:MI') WHERE POLESN=:POLESN AND POOLNO=:POOLNO ";
+
+                OracleParameter pPOLESN = objCmd.Parameters.Add("POLESN", OracleDbType.Varchar2);
+                OracleParameter pPOOLNO = objCmd.Parameters.Add("POOLNO", OracleDbType.Varchar2);
+
+                try
+                {
+                    objConn.Open();
+
+                    pPOLESN.Value = v_polesn;
+                    pPOOLNO.Value = v_poolno;
+                    objCmd.ExecuteNonQuery();
+
                     return "success";
                 }
                 catch (Exception ex)
