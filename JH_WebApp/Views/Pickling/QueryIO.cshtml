@@ -5,13 +5,12 @@
 
 <div class="page theme-dark">
     <header class="bar bar-nav">
-        <a class="button button-link button-nav pull-left back" href="/Pickling/QueryPole">
+        <a class="button button-link button-nav pull-left back" href="javascript:void(0)" onclick="window.history.back();">
             <span class="icon icon-left"></span>
             返回
         </a>
-        <a class="icon icon-home pull-right external" href="/Pickling"></a>
         <h1 class="title">桿次IO時間</h1>
-        
+
     </header>
 
     <div class="content">
@@ -20,12 +19,13 @@
         </div>
         <div class="list-block media-list inset">
             <ul id="polelist" ></ul>
+           
         </div>
     </div>
-    @*<div class="bar bar-footer">
+    <div class="bar bar-footer">
         <a href="/Pickling/" class="icon icon-home pull-left external"></a>
-       
-    </div>*@
+        @*<a class="icon icon-settings pull-right"></a>*@
+    </div>
 </div>
 @section scripts {
     <script>
@@ -71,10 +71,13 @@
                                 trHTML += '<li>';
                                 trHTML += '<div class="item-inner"><div class="item-title-row">';
                                 trHTML += '<div class="item-title">槽號:' + data.pole[i].POOLNO + '</div>';
-                                trHTML += '</div><div class="item-text"><div class="row">';
-                                trHTML += '<div class="col-20">開始:</div><div class="col-80">' + data.pole[i].BDT + '</div></div><div class="row">';
-                                trHTML += '<div class="col-20">結束:</div><div class="col-80">' + data.pole[i].LEAD_EDT + '</div>';
-                                trHTML += '</div></div></div></div></li>';
+                                trHTML += '<div class="item-after">差距:'+ data.pole[i].GAP_MIN +'</div>';
+                                trHTML += '</div><div class="item-text">';
+                                trHTML += '<div class="row"><div class="col-20">入料:</div><div class="col-80">' + data.pole[i].BDT + '</div></div>';
+                                trHTML += '<div class="row"><div class="col-20">出料:</div><div class="col-80">' + data.pole[i].LEAD_EDT +  '</div></div>';
+                                trHTML += '</div></div></li>';
+
+                              
                             });
 
                             $('#polelist').empty();

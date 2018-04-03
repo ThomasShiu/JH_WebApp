@@ -4,16 +4,13 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>@ViewBag.Title - JH Mobile Portal</title>
-    <meta name="google-site-verification" content="Fswng2jn4YU3_0HnvUp3DpY-zID8roztsU0f5enPppo" />
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="mobile-web-app-capable" content="yes" />
-    <!-- 隱藏底部 iPhone button bar -->
+    <meta name="description" content="MSUI: Build mobile apps with simple HTML, CSS, and JS components.">
+    <meta name="author" content="JH Mobile Portal">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <link rel="shortcut icon" href="/jh.ico">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <!-- 更改 status bar 樣式 -->
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="format-detection" content="telephone=no">
-    <link rel="shortcut icon" href="/jh.ico">
-    <link media="only screen and (max-device-width: 480px)" href="small-device.css" type="text/css" rel="stylesheet">
     <!-- Google Web Fonts -->
     <link href="~/Content/js/light7/dist/css/light7.css?r=201603281" rel="stylesheet" />
     <link href="~/Content/js/light7/dist/css/light7-swiper.css" rel="stylesheet" />
@@ -25,33 +22,32 @@
     
     <script>
       //ga
-        window.onload = function () {
-            setTimeout(function () {
-                window.scrollTo(0, 1);
-            }, 100);
-        }
     </script>
 </head>
 <body>
-
-    @RenderBody()
-
-    <audio id="beeplong" >
+    <audio id="beeplong">
         <source src="~/Content/media/beeplong.mp3" type="audio/mpeg" />
     </audio>
     <audio id="beeperror">
         <source src="~/Content/media/beep_error.mp3" type="audio/mpeg" />
     </audio>
-    <audio id="icq" >
+    <audio id="icq">
         <source src="~/Content/media/icq.mp3" type="audio/mpeg" />
     </audio>
-    <audio id="msn" >
+    <audio id="msn">
         <source src="~/Content/media/msn.mp3" type="audio/mpeg" />
     </audio>
+    @RenderBody()
+
+    
 
    
     @Scripts.Render("~/bundles/jquery")
     <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+<<<<<<< HEAD
+=======
+
+>>>>>>> b9028c9b241a24c5f5f1393becd0b271a0b786a4
     <script src="~/Content/js/light7/dist/js/light7.js"></script>
     <script src="~/Content/js/light7/dist/js/light7-swiper.min.js"></script>
     <script src="~/Content/js/light7/dist/js/light7-city-picker.min.js"></script>
@@ -63,7 +59,25 @@
          //    autoInit: true, //no recommend
          //    router: false,
          //}
-        
+        $.request = function (name) {
+            var search = location.search.slice(1);
+            var arr = search.split("&");
+            for (var i = 0; i < arr.length; i++) {
+                var ar = arr[i].split("=");
+                if (ar[0] == name) {
+                    if (unescape(ar[1]) == 'undefined') {
+                        return "";
+                    } else {
+                        return unescape(ar[1]);
+                    }
+                }
+            }
+            return "";
+        }
+        $.reload = function () {
+            location.reload();
+            return false;
+        }
          function GetNow() {
              var today = new Date();
              var dd = today.getDate();
