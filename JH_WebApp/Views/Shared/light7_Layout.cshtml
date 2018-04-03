@@ -52,7 +52,6 @@
    
     @Scripts.Render("~/bundles/jquery")
     <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
-    <script src="~/Scripts/framework.js"></script>
     <script src="~/Content/js/light7/dist/js/light7.js"></script>
     <script src="~/Content/js/light7/dist/js/light7-swiper.min.js"></script>
     <script src="~/Content/js/light7/dist/js/light7-city-picker.min.js"></script>
@@ -89,8 +88,23 @@
              //var now = yyyy + '-' + mm + '-' + dd + ' ' + hh + ':' + mi + ':' + ss;
              var now = yyyy + '-' + mm + '-' + dd + ' ' + hh + ':' + mi;
              return now;
-         }
+        }
 
+         $.request = function (name) {
+             var search = location.search.slice(1);
+             var arr = search.split("&");
+             for (var i = 0; i < arr.length; i++) {
+                 var ar = arr[i].split("=");
+                 if (ar[0] == name) {
+                     if (unescape(ar[1]) == 'undefined') {
+                         return "";
+                     } else {
+                         return unescape(ar[1]);
+                     }
+                 }
+             }
+             return "";
+         }
     </script>
     @RenderSection("scripts", required: false)
 </body>
